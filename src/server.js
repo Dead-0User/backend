@@ -93,7 +93,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/qrmenu";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://itsuditpy_db_user:fV39n001UckGb21s@cluster0.o54knhb.mongodb.net/?appName=Cluster0";
 mongoose
   .connect(MONGODB_URI, {
     useNewUrlParser: true,
