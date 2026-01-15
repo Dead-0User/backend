@@ -24,17 +24,17 @@ router.get("/table/:tableId", async (req, res) => {
     // Try to populate restaurant
     let restaurant = null;
     const Restaurant = require("../models/Restaurant");
-    
+
     try {
-      await table.populate("restaurantId", "restaurantName email templateStyle logo ownerId");
+      await table.populate("restaurantId", "restaurantName email templateStyle logo ownerId operationalHours address phone");
       restaurant = table.restaurantId;
-      
+
       // Check if populate worked (restaurant should be an object with _id)
       if (!restaurant || !restaurant._id) {
         console.warn("⚠️ Populate failed - restaurantId might be a User ID. Attempting fallback...");
         throw new Error("Populate failed");
       }
-      
+
       console.log("✅ Restaurant populated:", restaurant.restaurantName, "Template:", restaurant.templateStyle, "ownerId:", restaurant.ownerId);
     } catch (populateError) {
       // Fallback: If populate failed, the restaurantId might be a User ID
@@ -44,12 +44,12 @@ router.get("/table/:tableId", async (req, res) => {
         ownerId: table.restaurantId,
         isActive: true,
       });
-      
+
       if (!restaurant) {
         // Last resort: try to find restaurant by _id directly
         console.log("🔄 Last resort: trying to find restaurant by _id");
         restaurant = await Restaurant.findById(table.restaurantId);
-        
+
         if (!restaurant) {
           console.error("❌ Could not find restaurant for table:", tableId, "restaurantId:", table.restaurantId);
           return res.status(500).json({
@@ -58,7 +58,7 @@ router.get("/table/:tableId", async (req, res) => {
           });
         }
       }
-      
+
       console.log("✅ Found restaurant via fallback:", restaurant.restaurantName, "Template:", restaurant.templateStyle, "ownerId:", restaurant.ownerId);
     }
 
@@ -175,6 +175,8 @@ router.get("/table/:tableId", async (req, res) => {
           id: restaurant?._id,
           templateStyle: restaurant?.templateStyle || "classic",
           logo: restaurant?.logo || null,
+          operationalHours: restaurant?.operationalHours || "",
+          address: restaurant?.address || "",
         },
         table: {
           id: table._id,

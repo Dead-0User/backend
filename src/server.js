@@ -81,6 +81,7 @@ app.use("/api/menu", menuRoutes);
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/staff", staffRoutes);
 app.use("/api/chef", chefRoutes);
+app.use("/api/feedback", require("./routes/feedback"));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
