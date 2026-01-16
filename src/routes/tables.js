@@ -37,6 +37,7 @@ router.get("/validate/:tableId", async (req, res) => {
         tableId: table._id,
         tableName: table.tableName,
         seats: table.seats,
+        allowOrdering: table.allowOrdering !== false, // Default to true if undefined
         restaurant: {
           id: table.restaurantId._id,
           name: table.restaurantId.restaurantName,
@@ -64,7 +65,7 @@ router.get("/", async (req, res) => {
         message: "Restaurant not found for this user",
       });
     }
-    
+
     const restaurantId = req.restaurantId;
 
     const tables = await Table.find({
@@ -89,7 +90,7 @@ router.get("/", async (req, res) => {
 // POST /api/tables - Create a new table
 router.post("/", async (req, res) => {
   try {
-    const { tableName, seats = 4 } = req.body;
+    const { tableName, seats = 4, allowOrdering = true } = req.body;
 
     // Validation
     if (!tableName || tableName.trim() === "") {
@@ -112,7 +113,7 @@ router.post("/", async (req, res) => {
         message: "Restaurant not found for this user",
       });
     }
-    
+
     const restaurantId = req.restaurantId;
 
     // Check if table name already exists for this restaurant
@@ -134,6 +135,7 @@ router.post("/", async (req, res) => {
       restaurantId: restaurantId,
       tableName: tableName.trim(),
       seats: parseInt(seats),
+      allowOrdering,
     });
 
     const savedTable = await table.save();
@@ -163,7 +165,7 @@ router.post("/", async (req, res) => {
 router.put("/:tableId", async (req, res) => {
   try {
     const { tableId } = req.params;
-    const { tableName, seats } = req.body;
+    const { tableName, seats, allowOrdering } = req.body;
 
     // Validation
     if (!tableName || tableName.trim() === "") {
@@ -186,7 +188,7 @@ router.put("/:tableId", async (req, res) => {
         message: "Restaurant not found for this user",
       });
     }
-    
+
     const restaurantId = req.restaurantId;
 
     // Find table and verify ownership
@@ -225,6 +227,9 @@ router.put("/:tableId", async (req, res) => {
     if (seats) {
       table.seats = parseInt(seats);
     }
+    if (allowOrdering !== undefined) {
+      table.allowOrdering = allowOrdering;
+    }
 
     await table.save();
 
@@ -253,7 +258,7 @@ router.delete("/:tableId", async (req, res) => {
         message: "Restaurant not found for this user",
       });
     }
-    
+
     const restaurantId = req.restaurantId;
 
     // Find table and verify ownership
@@ -297,7 +302,7 @@ router.get("/:tableId/qr", async (req, res) => {
         message: "Restaurant not found for this user",
       });
     }
-    
+
     const restaurantId = req.restaurantId;
 
     // Find table and verify ownership
@@ -350,7 +355,7 @@ router.get("/:tableId/qr/download", async (req, res) => {
         message: "Restaurant not found for this user",
       });
     }
-    
+
     const restaurantId = req.restaurantId;
 
     // Find table and verify ownership

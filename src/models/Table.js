@@ -27,6 +27,14 @@ const tableSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  isCallingWaiter: {
+    type: Boolean,
+    default: false
+  },
+  allowOrdering: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true
@@ -42,12 +50,12 @@ mongoose.connection.once('open', async () => {
   try {
     const collection = mongoose.connection.db.collection('tables');
     const indexes = await collection.indexes();
-    
+
     console.log('Current indexes:', indexes.map(idx => idx.name));
-    
+
     // List of old indexes to remove
     const oldIndexes = ['qrCodeId_1', 'number_1_userId_1'];
-    
+
     for (const indexName of oldIndexes) {
       const hasOldIndex = indexes.some(index => index.name === indexName);
       if (hasOldIndex) {
@@ -56,7 +64,7 @@ mongoose.connection.once('open', async () => {
         console.log(`${indexName} dropped successfully`);
       }
     }
-    
+
     console.log('Index cleanup completed');
   } catch (error) {
     console.log('Index cleanup error:', error.message);

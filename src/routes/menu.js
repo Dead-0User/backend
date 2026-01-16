@@ -26,7 +26,7 @@ router.get("/table/:tableId", async (req, res) => {
     const Restaurant = require("../models/Restaurant");
 
     try {
-      await table.populate("restaurantId", "restaurantName email templateStyle logo ownerId operationalHours address phone");
+      await table.populate("restaurantId", "restaurantName email templateStyle logo ownerId operationalHours address phone allowOrdering");
       restaurant = table.restaurantId;
 
       // Check if populate worked (restaurant should be an object with _id)
@@ -182,6 +182,7 @@ router.get("/table/:tableId", async (req, res) => {
           id: table._id,
           tableName: table.tableName,
           seats: table.seats,
+          allowOrdering: table.allowOrdering !== false && restaurant?.allowOrdering !== false,
           restaurantId: restaurantObjectId,
         },
         menu: sectionsWithItems,

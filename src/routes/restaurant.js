@@ -145,6 +145,7 @@ router.get("/current", authMiddleware, async (req, res) => {
         licenseFields: licenseFields,
         receiptFooter: restaurant.receiptFooter || "Thank You Visit Again",
         taxes: restaurant.taxes || [],
+        allowOrdering: restaurant.allowOrdering !== false,
       },
     });
   } catch (err) {
@@ -176,6 +177,7 @@ router.put("/update", authMiddleware, upload.single("logo"), async (req, res) =>
       receiptFooter,
       taxes, // Expecting a JSON string if sent via FormData
       licenseFields, // Expecting a JSON string if sent via FormData
+      allowOrdering,
     } = req.body;
 
     // Get the restaurant
@@ -230,6 +232,7 @@ router.put("/update", authMiddleware, upload.single("logo"), async (req, res) =>
     if (gstNo !== undefined) restaurant.gstNo = gstNo;
     if (gstLabel !== undefined) restaurant.gstLabel = gstLabel;
     if (receiptFooter !== undefined) restaurant.receiptFooter = receiptFooter;
+    if (allowOrdering !== undefined) restaurant.allowOrdering = allowOrdering === 'true' || allowOrdering === true;
 
     if (taxes !== undefined) {
       try {
@@ -295,6 +298,7 @@ router.put("/update", authMiddleware, upload.single("logo"), async (req, res) =>
         licenseFields: restaurant.licenseFields,
         receiptFooter: restaurant.receiptFooter,
         taxes: restaurant.taxes,
+        allowOrdering: restaurant.allowOrdering,
       },
     });
   } catch (err) {

@@ -44,7 +44,7 @@ const orderItemSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "preparing", "ready", "served", "cancelled"],
+      enum: ["pending", "accepted", "preparing", "ready", "served", "cancelled"],
       default: "pending",
     },
   },
@@ -144,7 +144,7 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "preparing", "ready", "served", "paid", "cancelled"],
+      enum: ["pending", "accepted", "preparing", "ready", "served", "paid", "cancelled"],
       default: "pending",
       index: true,
     },
@@ -198,7 +198,7 @@ const orderSchema = new mongoose.Schema(
       type: Map,
       of: {
         type: String,
-        enum: ["pending", "preparing", "ready", "served", "paid", "cancelled"],
+        enum: ["pending", "accepted", "preparing", "ready", "served", "paid", "cancelled"],
         default: "pending",
       },
       default: {},

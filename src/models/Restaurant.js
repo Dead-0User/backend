@@ -120,6 +120,11 @@ const restaurantSchema = new mongoose.Schema({
     default: true,
   },
 
+  allowOrdering: {
+    type: Boolean,
+    default: true,
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,
