@@ -21,6 +21,28 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
+  // Subscription/Approval Fields
+  isApproved: {
+    type: Boolean,
+    default: false,
+  },
+
+  isSuperAdmin: {
+    type: Boolean,
+    default: false,
+  },
+
+  approvedAt: {
+    type: Date,
+    default: null,
+  },
+
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
+
   // OTP Fields for Password Reset
   otp: {
     type: String,

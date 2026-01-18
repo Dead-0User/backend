@@ -329,6 +329,8 @@ router.post("/login", async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        isApproved: user.isApproved,
+        isSuperAdmin: user.isSuperAdmin,
       },
       restaurant: restaurant
         ? {
@@ -386,15 +388,22 @@ router.get("/me", authMiddleware, async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
+    console.log("=== /me endpoint - User from DB ===");
+    console.log("isSuperAdmin:", user.isSuperAdmin);
+    console.log("isApproved:", user.isApproved);
+    console.log("Full user object:", user.toObject());
+
     // ✅ FETCH USER'S RESTAURANT
     const restaurant = await Restaurant.findOne({ ownerId: user._id, isActive: true });
 
-    res.json({
+    const responseData = {
       success: true,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
+        isApproved: user.isApproved,
+        isSuperAdmin: user.isSuperAdmin,
         restaurantId: restaurant?._id?.toString() || null, // Include restaurantId for socket connections
       },
       restaurant: restaurant
@@ -408,7 +417,12 @@ router.get("/me", authMiddleware, async (req, res) => {
           templateStyle: restaurant.templateStyle,
         }
         : null,
-    });
+    };
+
+    console.log("=== /me endpoint - Response ===");
+    console.log("Response user object:", responseData.user);
+
+    res.json(responseData);
   } catch (err) {
     console.error("Get Me Error:", err);
     res.status(500).json({ success: false, message: "Server error" });

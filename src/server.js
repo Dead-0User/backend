@@ -72,6 +72,7 @@ app.use(express.json());
 app.use('/src/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
+app.use("/api/admin", require("./routes/admin"));
 app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/sections", sectionRoutes);

@@ -9,8 +9,8 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL 
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL
     : 'http://localhost:3000',
   credentials: true
 }));
@@ -20,11 +20,12 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/qrmenu', 
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('MongoDB connected successfully'))
-.catch(err => console.error('MongoDB connection error:', err));
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
 app.use('/api/auth', require('./src/routes/auth'));
+app.use('/api/admin', require('./src/routes/admin'));
 app.use('/api/tables', require('./src/routes/tables'));
 // Add these lines to your app.js after the existing routes
 app.use('/api/sections', require('./src/routes/sections'));
@@ -33,8 +34,8 @@ app.use('/api/menu', require('./src/routes/menu'));
 app.use('/api/orders', require('./src/routes/orders'));
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     message: 'QR Menu API is running',
     timestamp: new Date().toISOString()
   });
